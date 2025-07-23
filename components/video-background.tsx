@@ -17,8 +17,8 @@ export default function VideoBackground({ videoId }: VideoBackgroundProps) {
     firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
 
     // Initialize player when API is ready
-    window.onYouTubeIframeAPIReady = () => {
-      new window.YT.Player(iframeRef.current!, {
+    ;(window as any).onYouTubeIframeAPIReady = () => {
+      new (window as any).YT.Player(iframeRef.current!, {
         videoId: videoId,
         playerVars: {
           autoplay: 1,
@@ -34,12 +34,12 @@ export default function VideoBackground({ videoId }: VideoBackgroundProps) {
           mute: 1, // Must be muted for autoplay
         },
         events: {
-          onReady: (event) => {
+          onReady: (event: any) => {
             event.target.playVideo()
           },
-          onStateChange: (event) => {
+          onStateChange: (event: any) => {
             // Loop the video when it ends
-            if (event.data === window.YT.PlayerState.ENDED) {
+            if (event.data === (window as any).YT.PlayerState.ENDED) {
               event.target.playVideo()
             }
           },

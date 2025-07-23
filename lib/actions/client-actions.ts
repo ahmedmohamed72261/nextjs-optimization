@@ -9,6 +9,7 @@ import {
   type ClientRequestInput,
   type ClientUpdate,
 } from "@/lib/validation/schemas"
+import type { Client } from "@/lib/database/types"
 
 // إنشاء طلب جديد من العميل
 export async function createClientRequest(formData: FormData) {
@@ -43,7 +44,7 @@ export async function createClientRequest(formData: FormData) {
 
     // إنشاء الطلب
     const request = await db.createClientRequest({
-      client_id: client.id,
+      client_id: (client as Client).id,
       ...validatedData,
     })
 
@@ -140,7 +141,7 @@ export async function updateClientProfile(formData: FormData) {
     }
 
     const validatedData = clientUpdateSchema.parse(cleanedData)
-    const updatedClient = await db.updateClient(client.id, validatedData)
+    const updatedClient = await db.updateClient((client as Client).id, validatedData)
 
     revalidatePath("/dashboard/profile")
     return { success: true, data: updatedClient }
@@ -167,7 +168,7 @@ export async function getClientRequests(page = 1, limit = 10) {
     }
 
     const offset = (page - 1) * limit
-    const requests = await db.getClientRequests(client.id, undefined, limit, offset)
+    const requests = await db.getClientRequests((client as Client).id, undefined, limit, offset)
 
     return { success: true, data: requests }
   } catch (error) {

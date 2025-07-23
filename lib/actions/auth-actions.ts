@@ -5,6 +5,7 @@ import { redirect } from "next/navigation"
 import { authService } from "@/lib/auth/auth-config"
 import { db } from "@/lib/database/supabase"
 import { clientSignUpSchema, clientSignInSchema, type ClientSignUp, type ClientSignIn } from "@/lib/validation/schemas"
+import type { Client } from "@/lib/database/types"
 
 // تسجيل دخول العميل
 export async function signInClient(formData: FormData) {
@@ -23,7 +24,7 @@ export async function signInClient(formData: FormData) {
     }
 
     // التحقق من وجود العميل في قاعدة البيانات
-    let client = await db.getClientByEmail(user.email!)
+    let client: Client | null = await db.getClientByEmail(user.email!)
 
     if (!client) {
       // إنشاء سجل العميل إذا لم يكن موجوداً

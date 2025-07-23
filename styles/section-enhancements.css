@@ -1,0 +1,486 @@
+/* Section Enhancement CSS - Fixes for absolute positioning and overflow issues */
+
+/* Base section container improvements */
+.section-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: fit-content;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.section-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Fix for sections with absolute positioned elements */
+section {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+section::-webkit-scrollbar {
+  display: none;
+}
+
+/* Ensure all absolute positioned elements stay within their containers */
+.absolute {
+  position: absolute;
+  max-width: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+}
+
+/* Container wrapper for absolute elements */
+.absolute-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+/* Enhanced section with proper containment */
+.enhanced-section {
+  position: relative;
+  overflow: hidden;
+  contain: layout style paint;
+  width: 100%;
+  min-height: fit-content;
+  padding: 2rem 0;
+}
+
+/* Fix for timeline sections with absolute positioning */
+.timeline-section {
+  position: relative;
+  overflow: visible; /* Allow timeline dots to show */
+  width: 100%;
+  padding: 4rem 0;
+}
+
+.timeline-section .timeline-items {
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.timeline-section .timeline-items::before {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  background: var(--main-color);
+  left: calc(50% - 2.5px);
+  top: 0;
+  z-index: 1;
+}
+
+.timeline-section .timeline-dot {
+  position: absolute;
+  left: calc(50% - 25px);
+  top: 10px;
+  z-index: 2;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgb(246, 165, 0);
+  box-shadow: 0 0 25px rgba(246, 165, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Hero section enhancements */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-section .absolute {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.hero-section .hero-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Card sections with absolute elements */
+.card-section {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.card-section .card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card-section .card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-section .card .absolute {
+  position: absolute;
+  max-width: calc(100% - 2rem);
+  max-height: calc(100% - 2rem);
+  margin: 1rem;
+}
+
+/* Animation container fixes */
+.animation-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.animation-container .absolute {
+  position: absolute;
+  animation-fill-mode: both;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+/* Responsive fixes for absolute positioning */
+@media (max-width: 1024px) {
+  .timeline-section .timeline-items::before {
+    left: 2rem;
+  }
+  
+  .timeline-section .timeline-dot {
+    left: 1.25rem;
+  }
+  
+  .timeline-section .timeline-item:nth-child(even),
+  .timeline-section .timeline-item:nth-child(odd) {
+    padding-left: 5rem;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .enhanced-section {
+    padding: 1.5rem 0;
+  }
+  
+  .hero-section {
+    min-height: 50vh;
+  }
+  
+  .hero-section .hero-content {
+    padding: 0 1rem;
+  }
+  
+  .timeline-section .timeline-dot {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+    left: 0.75rem;
+  }
+  
+  .timeline-section .timeline-item:nth-child(even),
+  .timeline-section .timeline-item:nth-child(odd) {
+    padding-left: 3.5rem;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .enhanced-section {
+    padding: 1rem 0;
+  }
+  
+  .hero-section {
+    min-height: 40vh;
+  }
+  
+  .card-section .card .absolute {
+    position: relative;
+    max-width: 100%;
+    max-height: none;
+    margin: 0;
+  }
+}
+
+/* Accordion section enhancements */
+.accordion-section {
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.accordion-section .accordion {
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.accordion-section .accordion::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  width: 3px;
+  background: var(--main-color);
+  opacity: 0.7;
+  transform: translateX(-50%);
+}
+
+/* Service card enhancements */
+.service-section {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.service-section .service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.service-section .service-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.service-section .service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.service-section .service-card .image-container {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16/9;
+  border-radius: 1rem 1rem 0 0;
+}
+
+.service-section .service-card .absolute-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.service-section .service-card:hover .absolute-overlay {
+  opacity: 1;
+}
+
+/* Background decoration fixes */
+.background-decoration {
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.background-decoration::before,
+.background-decoration::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(12, 60, 139, 0.1), rgba(246, 165, 0, 0.1));
+  animation: float 6s ease-in-out infinite;
+}
+
+.background-decoration::before {
+  width: 300px;
+  height: 300px;
+  top: -150px;
+  right: -150px;
+  animation-delay: 0s;
+}
+
+.background-decoration::after {
+  width: 200px;
+  height: 200px;
+  bottom: -100px;
+  left: -100px;
+  animation-delay: 3s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+}
+
+/* Video background fixes */
+.video-background {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.video-background .absolute {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+}
+
+/* Utility classes for enhanced sections */
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+.overflow-visible {
+  overflow: visible !important;
+}
+
+.position-relative {
+  position: relative !important;
+}
+
+.position-absolute {
+  position: absolute !important;
+}
+
+.contain-layout {
+  contain: layout !important;
+}
+
+.contain-paint {
+  contain: paint !important;
+}
+
+.contain-strict {
+  contain: strict !important;
+}
+
+/* RTL specific fixes */
+[dir="rtl"] .timeline-section .timeline-items::before {
+  right: calc(50% - 2.5px);
+  left: auto;
+}
+
+[dir="rtl"] .timeline-section .timeline-dot {
+  right: calc(50% - 25px);
+  left: auto;
+}
+
+[dir="rtl"] .background-decoration::before {
+  left: -150px;
+  right: auto;
+}
+
+[dir="rtl"] .background-decoration::after {
+  right: -100px;
+  left: auto;
+}
+
+@media (max-width: 1024px) {
+  [dir="rtl"] .timeline-section .timeline-items::before {
+    right: 2rem;
+    left: auto;
+  }
+  
+  [dir="rtl"] .timeline-section .timeline-dot {
+    right: 1.25rem;
+    left: auto;
+  }
+  
+  [dir="rtl"] .timeline-section .timeline-item:nth-child(even),
+  [dir="rtl"] .timeline-section .timeline-item:nth-child(odd) {
+    padding-right: 5rem;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  [dir="rtl"] .timeline-section .timeline-dot {
+    right: 0.75rem;
+    left: auto;
+  }
+  
+  [dir="rtl"] .timeline-section .timeline-item:nth-child(even),
+  [dir="rtl"] .timeline-section .timeline-item:nth-child(odd) {
+    padding-right: 3.5rem;
+    padding-left: 0;
+    margin-left: 0;
+  }
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Smooth scrolling for sections */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Focus and accessibility improvements */
+.enhanced-section:focus-within {
+  outline: 2px solid var(--main-color);
+  outline-offset: 4px;
+}
+
+.enhanced-section .absolute:focus {
+  z-index: 1000;
+  outline: 2px solid var(--main-color);
+  outline-offset: 2px;
+}

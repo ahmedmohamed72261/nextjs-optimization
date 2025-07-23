@@ -5,13 +5,21 @@ export const fetchAbout = createAsyncThunk("about/fetchAbout", async () => {
   return response.json()
 })
 
+interface AboutState {
+  about: any
+  status: 'idle' | 'loading' | 'succeeded' | 'failed'
+  error: string | null
+}
+
+const initialState: AboutState = {
+  about: null,
+  status: "idle",
+  error: null,
+}
+
 const aboutSlice = createSlice({
   name: "about",
-  initialState: {
-    about: [],
-    status: "idle",
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -24,7 +32,7 @@ const aboutSlice = createSlice({
       })
       .addCase(fetchAbout.rejected, (state, action) => {
         state.status = "failed"
-        state.error = action.error.message
+        state.error = action.error.message || null
       })
   },
 })

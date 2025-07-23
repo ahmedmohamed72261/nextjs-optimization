@@ -19,7 +19,7 @@ export default function Loader({
 }: LoaderProps) {
   return (
     <div className={className}>
-      <FallingLines color={color} width={width} visible={visible} ariaLabel={ariaLabel} />
+      <FallingLines color={color} width={width} visible={visible} />
     </div>
   )
 }

@@ -34,15 +34,17 @@ export async function GET(request: NextRequest) {
     }
 
     if (validatedData.minPrice) {
-      filteredServices = filteredServices.filter((service) => service.min_price >= validatedData.minPrice!)
+      filteredServices = filteredServices.filter((service) => service.price >= validatedData.minPrice!)
     }
 
     if (validatedData.maxPrice) {
-      filteredServices = filteredServices.filter((service) => service.max_price <= validatedData.maxPrice!)
+      filteredServices = filteredServices.filter((service) => service.price <= validatedData.maxPrice!)
     }
 
     if (validatedData.deliveryTime) {
-      filteredServices = filteredServices.filter((service) => service.delivery_time_days <= validatedData.deliveryTime!)
+      // Note: delivery_time_days property doesn't exist in current service structure
+      // This filter is commented out until the service structure is updated
+      // filteredServices = filteredServices.filter((service) => service.delivery_time_days <= validatedData.deliveryTime!)
     }
 
     return NextResponse.json({

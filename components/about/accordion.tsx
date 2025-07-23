@@ -46,7 +46,7 @@ const Accordion = ({ animation }: AccordionProps) => {
   ]
 
   return (
-    <div className="container overflow-y-hidden">
+    <div className="accordion-section container">
       <div className="head">
         <h3>الاسئله الشائعه</h3>
       </div>

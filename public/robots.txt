@@ -1,4 +1,60 @@
+# Robots.txt for ويز فريلانس
+# https://www.wizfreelance.com/robots.txt
+
 User-agent: *
 Allow: /
 
+# Disallow admin and private areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /_next/
+Disallow: /dashboard/
+Disallow: /private/
+
+# Allow specific API endpoints for SEO
+Allow: /api/sitemap
+Allow: /api/robots
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Sitemap location
 Sitemap: https://www.wizfreelance.com/sitemap.xml
+Sitemap: https://www.wizfreelance.com/sitemap-0.xml
+
+# Specific bot instructions
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 2
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Social media bots
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: WhatsApp
+Allow: /

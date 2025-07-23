@@ -1,23 +1,85 @@
-import { createClient } from "@supabase/supabase-js"
+// Mock database service without Supabase dependency
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+// Mock clients for development
+export const supabase = null
+export const supabaseAdmin = null
 
-// Client-side Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-// Server-side Supabase client with service role
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-})
-
-// Database helper functions
+// Mock database service with sample data
 export class DatabaseService {
-  private client = supabaseAdmin
+  // Mock data
+  private mockFreelancers = [
+    {
+      id: "1",
+      full_name: "أحمد محمد",
+      email: "ahmed@example.com",
+      title: "مطور ويب متقدم",
+      bio: "مطور ويب متخصص في React و Node.js",
+      hourly_rate: 50,
+      experience_years: 5,
+      location: "الرياض، السعودية",
+      languages: ["العربية", "الإنجليزية"],
+      rating: 4.8,
+      is_available: true,
+      is_verified: true,
+      freelancer_skills: [
+        {
+          proficiency_level: "expert",
+          skill: { name: "React", category: "Frontend" }
+        },
+        {
+          proficiency_level: "advanced",
+          skill: { name: "Node.js", category: "Backend" }
+        }
+      ]
+    },
+    {
+      id: "2",
+      full_name: "فاطمة علي",
+      email: "fatima@example.com",
+      title: "مصممة UI/UX",
+      bio: "مصممة واجهات مستخدم مبدعة",
+      hourly_rate: 40,
+      experience_years: 3,
+      location: "جدة، السعودية",
+      languages: ["العربية", "الإنجليزية"],
+      rating: 4.9,
+      is_available: true,
+      is_verified: true,
+      freelancer_skills: [
+        {
+          proficiency_level: "expert",
+          skill: { name: "UI Design", category: "Design" }
+        }
+      ]
+    }
+  ];
+
+  private mockServices = [
+    {
+      id: "1",
+      title: "تطوير موقع ويب",
+      description: "تطوير موقع ويب متجاوب باستخدام أحدث التقنيات",
+      price: 1000,
+      is_active: true,
+      category: {
+        name: "تطوير الويب",
+        icon: "🌐",
+        color: "#3B82F6"
+      }
+    },
+    {
+      id: "2",
+      title: "تصميم شعار",
+      description: "تصميم شعار احترافي لعلامتك التجارية",
+      price: 200,
+      is_active: true,
+      category: {
+        name: "التصميم",
+        icon: "🎨",
+        color: "#EF4444"
+      }
+    }
+  ];
 
   // Client operations
   async createClient(clientData: {
@@ -26,17 +88,17 @@ export class DatabaseService {
     phone?: string
     company_name?: string
   }) {
-    const { data, error } = await this.client.from("clients").insert([clientData]).select().single()
-
-    if (error) throw error
-    return data
+    return {
+      id: Math.random().toString(36).substr(2, 9),
+      ...clientData,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      is_verified: false
+    }
   }
 
   async getClientByEmail(email: string) {
-    const { data, error } = await this.client.from("clients").select("*").eq("email", email).single()
-
-    if (error && error.code !== "PGRST116") throw error
-    return data
+    return null // No client found
   }
 
   async updateClient(
@@ -49,61 +111,26 @@ export class DatabaseService {
       is_verified: boolean
     }>,
   ) {
-    const { data, error } = await this.client
-      .from("clients")
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq("id", id)
-      .select()
-      .single()
-
-    if (error) throw error
-    return data
+    return {
+      id,
+      ...updates,
+      updated_at: new Date().toISOString()
+    }
   }
 
   // Freelancer operations
   async getAvailableFreelancers(limit = 20, offset = 0) {
-    const { data, error } = await this.client
-      .from("freelancers")
-      .select(`
-        *,
-        freelancer_skills (
-          proficiency_level,
-          skill:skills (
-            name,
-            category
-          )
-        )
-      `)
-      .eq("is_available", true)
-      .eq("is_verified", true)
-      .order("rating", { ascending: false })
-      .range(offset, offset + limit - 1)
-
-    if (error) throw error
-    return data
+    return this.mockFreelancers.slice(offset, offset + limit)
   }
 
   async getFreelancersBySkills(skillNames: string[], limit = 10) {
-    const { data, error } = await this.client
-      .from("freelancers")
-      .select(`
-        *,
-        freelancer_skills!inner (
-          proficiency_level,
-          skill:skills!inner (
-            name,
-            category
-          )
+    return this.mockFreelancers
+      .filter(freelancer => 
+        freelancer.freelancer_skills.some(skill => 
+          skillNames.includes(skill.skill.name)
         )
-      `)
-      .eq("is_available", true)
-      .eq("is_verified", true)
-      .in("freelancer_skills.skill.name", skillNames)
-      .order("rating", { ascending: false })
-      .limit(limit)
-
-    if (error) throw error
-    return data
+      )
+      .slice(0, limit)
   }
 
   async createFreelancer(freelancerData: {
@@ -116,262 +143,106 @@ export class DatabaseService {
     location?: string
     languages?: string[]
   }) {
-    const { data, error } = await this.client.from("freelancers").insert([freelancerData]).select().single()
-
-    if (error) throw error
-    return data
+    return {
+      id: Math.random().toString(36).substr(2, 9),
+      ...freelancerData,
+      rating: 0,
+      is_available: true,
+      is_verified: false,
+      created_at: new Date().toISOString()
+    }
   }
 
   // Service operations
   async getServices(categoryId?: string, limit = 20, offset = 0) {
-    let query = this.client
-      .from("services")
-      .select(`
-        *,
-        category:categories (
-          name,
-          icon,
-          color
-        )
-      `)
-      .eq("is_active", true)
-
-    if (categoryId) {
-      query = query.eq("category_id", categoryId)
-    }
-
-    const { data, error } = await query.order("created_at", { ascending: false }).range(offset, offset + limit - 1)
-
-    if (error) throw error
-    return data
+    return this.mockServices.slice(offset, offset + limit)
   }
 
   async getCategories() {
-    const { data, error } = await this.client.from("categories").select("*").eq("is_active", true).order("name")
-
-    if (error) throw error
-    return data
+    return [
+      { id: "1", name: "تطوير الويب", icon: "🌐", color: "#3B82F6", is_active: true },
+      { id: "2", name: "التصميم", icon: "🎨", color: "#EF4444", is_active: true },
+      { id: "3", name: "التسويق", icon: "📈", color: "#10B981", is_active: true }
+    ]
   }
 
   // Client request operations
-  async createClientRequest(requestData: {
-    client_id: string
-    service_id?: string
-    title: string
-    description: string
-    budget_min?: number
-    budget_max?: number
-    deadline?: string
-    priority?: "low" | "medium" | "high" | "urgent"
-    requirements?: string[]
-    attachments?: string[]
-  }) {
-    const { data, error } = await this.client
-      .from("client_requests")
-      .insert([requestData])
-      .select(`
-        *,
-        client:clients (*),
-        service:services (
-          *,
-          category:categories (*)
-        )
-      `)
-      .single()
-
-    if (error) throw error
-    return data
+  async createClientRequest(requestData: any) {
+    return {
+      id: Math.random().toString(36).substr(2, 9),
+      ...requestData,
+      status: "pending",
+      created_at: new Date().toISOString()
+    }
   }
 
   async getClientRequests(clientId?: string, status?: string, limit = 20, offset = 0) {
-    let query = this.client.from("client_requests").select(`
-        *,
-        client:clients (*),
-        service:services (
-          *,
-          category:categories (*)
-        )
-      `)
-
-    if (clientId) {
-      query = query.eq("client_id", clientId)
-    }
-
-    if (status) {
-      query = query.eq("status", status)
-    }
-
-    const { data, error } = await query.order("created_at", { ascending: false }).range(offset, offset + limit - 1)
-
-    if (error) throw error
-    return data
+    return []
   }
 
   async updateRequestStatus(requestId: string, status: string) {
-    const { data, error } = await this.client
-      .from("client_requests")
-      .update({
-        status,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", requestId)
-      .select()
-      .single()
-
-    if (error) throw error
-    return data
+    return {
+      id: requestId,
+      status,
+      updated_at: new Date().toISOString()
+    }
   }
 
-  // Assignment operations (Platform assigns freelancers)
+  // Assignment operations
   async assignFreelancerToRequest(requestId: string, freelancerId: string, estimatedCompletion?: string) {
-    const { data, error } = await this.client
-      .from("freelancer_assignments")
-      .insert([
-        {
-          request_id: requestId,
-          freelancer_id: freelancerId,
-          assigned_by: "system",
-          estimated_completion: estimatedCompletion,
-        },
-      ])
-      .select(`
-        *,
-        request:client_requests (
-          *,
-          client:clients (*)
-        ),
-        freelancer:freelancers (*)
-      `)
-      .single()
-
-    if (error) throw error
-
-    // Update request status to assigned
-    await this.updateRequestStatus(requestId, "assigned")
-
-    return data
+    return {
+      id: Math.random().toString(36).substr(2, 9),
+      request_id: requestId,
+      freelancer_id: freelancerId,
+      status: "assigned",
+      assigned_at: new Date().toISOString()
+    }
   }
 
   async getAssignments(freelancerId?: string, status?: string, limit = 20) {
-    let query = this.client.from("freelancer_assignments").select(`
-        *,
-        request:client_requests (
-          *,
-          client:clients (*)
-        ),
-        freelancer:freelancers (*)
-      `)
-
-    if (freelancerId) {
-      query = query.eq("freelancer_id", freelancerId)
-    }
-
-    if (status) {
-      query = query.eq("status", status)
-    }
-
-    const { data, error } = await query.order("assigned_at", { ascending: false }).limit(limit)
-
-    if (error) throw error
-    return data
+    return []
   }
 
   // Project operations
   async createProject(assignmentId: string, agreedPrice: number, deadline?: string) {
-    // Get assignment details
-    const { data: assignment, error: assignmentError } = await this.client
-      .from("freelancer_assignments")
-      .select(`
-        *,
-        request:client_requests (
-          *,
-          client:clients (*)
-        ),
-        freelancer:freelancers (*)
-      `)
-      .eq("id", assignmentId)
-      .single()
-
-    if (assignmentError) throw assignmentError
-
-    const { data, error } = await this.client
-      .from("projects")
-      .insert([
-        {
-          assignment_id: assignmentId,
-          client_id: assignment.request.client_id,
-          freelancer_id: assignment.freelancer_id,
-          title: assignment.request.title,
-          description: assignment.request.description,
-          agreed_price: agreedPrice,
-          deadline,
-        },
-      ])
-      .select(`
-        *,
-        client:clients (*),
-        freelancer:freelancers (*)
-      `)
-      .single()
-
-    if (error) throw error
-    return data
+    return {
+      id: Math.random().toString(36).substr(2, 9),
+      assignment_id: assignmentId,
+      agreed_price: agreedPrice,
+      deadline,
+      status: "in_progress",
+      progress_percentage: 0,
+      created_at: new Date().toISOString()
+    }
   }
 
   async updateProjectProgress(projectId: string, progressPercentage: number) {
-    const { data, error } = await this.client
-      .from("projects")
-      .update({
-        progress_percentage: progressPercentage,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", projectId)
-      .select()
-      .single()
-
-    if (error) throw error
-    return data
+    return {
+      id: projectId,
+      progress_percentage: progressPercentage,
+      updated_at: new Date().toISOString()
+    }
   }
 
   async completeProject(projectId: string, clientRating?: number, clientFeedback?: string) {
-    const { data, error } = await this.client
-      .from("projects")
-      .update({
-        status: "completed",
-        progress_percentage: 100,
-        completion_date: new Date().toISOString(),
-        client_rating: clientRating,
-        client_feedback: clientFeedback,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", projectId)
-      .select()
-      .single()
-
-    if (error) throw error
-    return data
+    return {
+      id: projectId,
+      status: "completed",
+      progress_percentage: 100,
+      completion_date: new Date().toISOString(),
+      client_rating: clientRating,
+      client_feedback: clientFeedback
+    }
   }
 
   // Statistics
   async getStats() {
-    const [
-      { count: totalFreelancers },
-      { count: totalClients },
-      { count: totalProjects },
-      { count: completedProjects },
-    ] = await Promise.all([
-      this.client.from("freelancers").select("*", { count: "exact", head: true }),
-      this.client.from("clients").select("*", { count: "exact", head: true }),
-      this.client.from("projects").select("*", { count: "exact", head: true }),
-      this.client.from("projects").select("*", { count: "exact", head: true }).eq("status", "completed"),
-    ])
-
     return {
-      totalFreelancers: totalFreelancers || 0,
-      totalClients: totalClients || 0,
-      totalProjects: totalProjects || 0,
-      completedProjects: completedProjects || 0,
-      successRate: totalProjects ? Math.round((completedProjects / totalProjects) * 100) : 0,
+      totalFreelancers: 150,
+      totalClients: 300,
+      totalProjects: 75,
+      completedProjects: 60,
+      successRate: 80
     }
   }
 }

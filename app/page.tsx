@@ -147,7 +147,7 @@ export default function HomePage() {
       </header>
 
       {/* Enhanced Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#0C3C8B] via-[#143F85] to-[#1e40af] text-white py-24 overflow-hidden">
+      <section className="hero-section relative bg-gradient-to-br from-[#0C3C8B] via-[#143F85] to-[#1e40af] text-white py-24">
         {/* Background Elements */}
         <div className="absolute inset-0 bg-[url('/placeholder.svg?height=800&width=1200&text=Pattern')] opacity-5"></div>
         <div className="absolute top-20 right-20 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>

@@ -3,7 +3,7 @@
 import { useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useDispatch, useSelector } from "react-redux"
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks"
 import AOS from "aos"
 import "aos/dist/aos.css"
 import { FallingLines } from "react-loader-spinner"
@@ -16,9 +16,9 @@ import Bannar from "@/components/shared/bannar"
 import "@/styles/about.css"
 
 export default function AboutContent() {
-  const dispatch = useDispatch()
-  const about = useSelector((state) => state.about.about)
-  const aboutStatus = useSelector((state) => state.about.status)
+  const dispatch = useAppDispatch()
+  const about = useAppSelector((state) => state.about.about)
+  const aboutStatus = useAppSelector((state) => state.about.status)
 
   useEffect(() => {
     if (aboutStatus === "idle") {
@@ -36,14 +36,14 @@ export default function AboutContent() {
   if (aboutStatus === "loading") {
     return (
       <div className="h-screen flex justify-center pl-10 items-center">
-        <FallingLines color="#0065D2" width="500" visible={true} ariaLabel="falling-circles-loading" />
+        <FallingLines color="#0065D2" width="500" visible={true} />
       </div>
     )
   }
 
   return (
     <>
-      <section className="about-hero container">
+      <section className="enhanced-section about-hero container">
         <Image
           src={about?.HeroSection?.heroImage || "/placeholder.svg?height=400&width=500"}
           alt={about?.HeroSection?.heroImageAlt || "ويز فريلانس"}
@@ -89,10 +89,10 @@ export default function AboutContent() {
       />
 
       {/* Timeline Section */}
-      <section className="education container overflow-y-hidden" id="education">
+      <section className="timeline-section education container" id="education">
         <h3 className="heading">
           {about?.timeLine?.timeLineTitle ||
-            "أدركنا حاجة رواد الأعمال إلى حلول تسويقية شاملة تُساعدهم على تحقيق النجاح، فأنشأنا ويزفريلانس لتلبية هذه الاحتياجات"}
+            "أدركنا حاجة رواد الأعمال إلى حلول تسويقية شاملة تُساعدهم على تحقيق النجاح، فأنشأنا ويزفري��انس لتلبية هذه الاحتياجات"}
         </h3>
         <div className="timeline-items">
           <div data-aos="fade-up" className="timeline-item">
@@ -113,7 +113,7 @@ export default function AboutContent() {
             <div className="timeline-dot"> 3</div>
             <div className="timeline-content">
               <h3>{about?.timeLine?.title_3 || "تطوير الاستراتيجية"}</h3>
-              <p>{about?.timeLine?.desc_3 || "نضع خطة تسويقية متكاملة تناسب احتياجات عملك وتستهدف جمهورك بدقة."}</p>
+              <p>{about?.timeLine?.desc_3 || "نضع خطة تسويقية متكام��ة تناسب احتياجات عملك وتستهدف جمهورك بدقة."}</p>
             </div>
           </div>
           <div data-aos="fade-up" className="timeline-item">
